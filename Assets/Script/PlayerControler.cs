@@ -12,7 +12,10 @@ public class PlayerControler : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
+    { 
+        //dodaj do wspólrzednych wartoœæ x=1, y=0, z=0 pomnozone przez czas
+        //mierzony w sekundach od osztatniej klatki
+        transform.position += new Vector3(1, 0, 0) * Time.deltaTime;
+
     }
 }
