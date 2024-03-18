@@ -26,22 +26,55 @@ public class AsteroidSpawner : MonoBehaviour
         timeSinceSpawn += Time.deltaTime;
         
 
-        if (timeSinceSpawn > 1)
+        if (timeSinceSpawn > 0.1)
         {
             GameObject asteroid = SpawnAsteroid(StaticAsteroid);
             timeSinceSpawn = 0;
         }
+        AsteroidCountControll();
     }
 
     GameObject SpawnAsteroid(GameObject prefab)
     {
 
-        Vector3 randomPosition = Random.onUnitSphere * 10;
+       
+        
+            Vector2 randomCirclePosition = Random.insideUnitCircle.normalized;
 
-        randomPosition += player.position;
+            Vector3 randomPosition = new Vector3(randomCirclePosition.x, 0, randomCirclePosition.y) * 10;
 
-        GameObject asteroid = Instantiate(StaticAsteroid, randomPosition, Quaternion.identity);
+            randomPosition += player.position;
 
-        return asteroid;
+            if (!Physics.CheckSphere(randomPosition, 5))
+            {
+
+                GameObject asteroid = Instantiate(StaticAsteroid, randomPosition, Quaternion.identity);
+
+                return asteroid;
+
+            }
+        else
+        {
+            return null;
+        }
+    }
+    void AsteroidCountControll()
+    {
+        GameObject[] asteroids = GameObject.FindGameObjectsWithTag("Asteroid");
+
+        foreach (GameObject asteroid in asteroids)
+        {
+            Vector3 delta = player.position - asteroid.transform.position;
+            
+            float distanceToPlayer = delta.magnitude;
+
+            if (distanceToPlayer > 30) 
+            {
+            
+            Destroy(asteroid);
+            
+            }
+
+        }
     }
 }
