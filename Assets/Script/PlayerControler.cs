@@ -32,7 +32,9 @@ public class PlayerControler : MonoBehaviour
         //pomnoz przez predkosc lotu
         movment *= flySpeed;
         //dodaj ruch do obiektu
-        transform.position += movment;
+        //---transform.position += movment;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.AddForce(movment, ForceMode.VelocityChange);
 
         //obrot
 
@@ -49,5 +51,18 @@ public class PlayerControler : MonoBehaviour
         //nie mozemy uzyc += poniewaz unity uzywa quaterenionow do zapisu rotacji
         transform.Rotate(rotation);
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.collider.transform.CompareTag("Asteroid"))
+        {
+
+            Debug.Log("Boom!");
+
+            Time.timeScale = 0;
+        }
+    
     }
 }
