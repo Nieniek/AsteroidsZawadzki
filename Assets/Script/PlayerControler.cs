@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerControler : MonoBehaviour
@@ -8,6 +9,8 @@ public class PlayerControler : MonoBehaviour
     public float flySpeed = 5f;
 
     GameObject levelMenagerObject;
+
+    float shieldCapacity =1;
 
     // Start is called before the first frame update
     void Start()
@@ -61,16 +64,25 @@ public class PlayerControler : MonoBehaviour
         Vector3 target = levelMenagerObject.GetComponent<LevelManager>().exitPosition;
 
         transform.Find("NavUI").Find("TargetMarker").LookAt(target);
+
+        TextMeshProUGUI shieldText =
+            GameObject.Find("Canvas").transform.Find("ShieldCapacityText").GetComponent<TextMeshProUGUI>();
+        shieldText.text = "Shield:" + (shieldCapacity * 100).ToString() + "%";
     }
     private void OnCollisionEnter(Collision collision)
     {
 
         if (collision.collider.transform.CompareTag("Asteroid"))
         {
+            Transform asteroid = collision.collider.transform;
 
-            Debug.Log("Boom!");
+            Vector3 shieldForce = asteroid.position - transform.position;
 
-            Time.timeScale = 0;
+            asteroid.GetComponent<Rigidbody>().AddForce(shieldForce * 5, ForceMode.Impulse);
+            shieldCapacity -= 0.25f;
+            //Debug.Log("Boom!");
+
+            //Time.timeScale = 0;
         }
     
     }
