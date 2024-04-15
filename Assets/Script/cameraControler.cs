@@ -11,7 +11,7 @@ public class cameraControler : MonoBehaviour
 
     Vector3 cameraSpeed;
 
-    public float dampSpeed = 0.01f;
+    public float sampSpeed = 1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +26,6 @@ public class cameraControler : MonoBehaviour
 
         // transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime);
 
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref cameraSpeed, dampSpeed);
+        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref cameraSpeed, sampSpeed);
     }
 }
