@@ -40,9 +40,9 @@ public class LevelManager : MonoBehaviour
     {
         Time.timeScale = 0f;
 
-        levelFailed = true;
+        levelComplete = true;
 
-        Camera.main.transform.Find("GameOverSound").GetComponent<AudioSource>().Play();
+        Camera.main.transform.Find("LevelCompleteSound").GetComponent<AudioSource>().Play();
     }
     public void OnFailure()
     {
