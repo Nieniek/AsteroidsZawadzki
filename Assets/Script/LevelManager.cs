@@ -42,14 +42,14 @@ public class LevelManager : MonoBehaviour
 
         levelComplete = true;
 
-        Camera.main.transform.Find("LevelCompleteSound").GetComponent<AudioSource>().Play();
+        Camera.main.transform.GetComponent<AudioSource>().Stop();
     }
     public void OnFailure()
     {
         Time.timeScale = 0f;
 
         levelFailed = true;
-        
-        Camera.main.transform.Find("GameOverSound").GetComponent<AudioSource>().Play();
+
+        Camera.main.transform.GetComponent<AudioSource>().Stop();
     }
 }
