@@ -27,11 +27,29 @@ public class LevelManager : MonoBehaviour
         
         exitPosition = new Vector3(spawnCircle.x, 0, spawnCircle.y);
         Instantiate(exitPrefab, exitPosition, Quaternion.identity);
+
+        Time.timeScale = 1f;
     }
 
     
     void Update()
     {
 
+    }
+    public void OnSuccess()
+    {
+        Time.timeScale = 0f;
+
+        levelFailed = true;
+
+        Camera.main.transform.Find("GameOverSound").GetComponent<AudioSource>().Play();
+    }
+    public void OnFailure()
+    {
+        Time.timeScale = 0f;
+
+        levelFailed = true;
+        
+        Camera.main.transform.Find("GameOverSound").GetComponent<AudioSource>().Play();
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerControler : MonoBehaviour
@@ -7,12 +8,14 @@ public class PlayerControler : MonoBehaviour
     public float rotationSpeed = 100f;
     public float flySpeed = 5f;
 
-    GameObject levelMenagerObject;
+    GameObject levelManagerObject;
+
+    float shieldCapacity = 1;
 
     // Start is called before the first frame update
     void Start()
     {
-        levelMenagerObject = GameObject.Find("levelMenager");
+        levelManagerObject = GameObject.Find("levelMenager");
     }
 
     // Update is called once per frame
@@ -58,20 +61,50 @@ public class PlayerControler : MonoBehaviour
 
     private void UpdateUI()
     {
-        Vector3 target = levelMenagerObject.GetComponent<LevelManager>().exitPosition;
+        Vector3 target = levelManagerObject.GetComponent<LevelManager>().exitPosition;
 
         transform.Find("NavUI").Find("TargetMarker").LookAt(target);
+
+        TextMeshProUGUI shieldText = 
+            GameObject.Find("Canvas").transform.Find("ShieldCapacityText").GetComponent<TextMeshProUGUI>();
+        shieldText.text = "Shield:" + (shieldCapacity * 100).ToString() + "%";
+
+        if (levelManagerObject.GetComponent<LevelManager>().levelComplete)
+        {
+            GameObject.Find("Canvas").transform.Find("LevelCompleteScreen").gameObject.SetActive(true);
+        }
+        if (levelManagerObject.GetComponent<LevelManager>().levelFailed)
+        {
+            GameObject.Find("Canvas").transform.Find("GameOverScreen").gameObject.SetActive(true);
+        }
+
+
     }
     private void OnCollisionEnter(Collision collision)
     {
 
         if (collision.collider.transform.CompareTag("Asteroid"))
         {
+            Transform asteroid = collision.collider.transform;
 
-            Debug.Log("Boom!");
+            Vector3 shieldForce = asteroid.position - transform.position;
 
-            Time.timeScale = 0;
+            asteroid.GetComponent<Rigidbody>().AddForce(shieldForce * 5, ForceMode.Impulse);
+            shieldCapacity -= 0.25f;
+            if(shieldCapacity <= 0)
+            {
+                levelManagerObject.GetComponent<LevelManager>().OnFailure();
+            } 
+            
         }
     
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.CompareTag("LevelExit"))
+        {
+            levelManagerObject.GetComponent<LevelManager>().OnSuccess();
+        }
+
     }
 }
